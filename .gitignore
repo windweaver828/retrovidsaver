@@ -1,5 +1,6 @@
-# Ignore videos folder
+# Ignore videos folder and config file
 videos/
+screensaver.cfg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
