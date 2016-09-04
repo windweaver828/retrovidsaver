@@ -1,3 +1,5 @@
+# Ignore videos folder
+videos/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

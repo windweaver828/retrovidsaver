@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
 import struct
-import time
 
 if __name__ == "__main__":
-    time.sleep(.1)
     try:
         input_devices = ["/dev/input/event4"]
         FORMAT = "llHHI"
