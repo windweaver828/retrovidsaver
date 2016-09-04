@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-"Keith's Custom Process Functionality"
+"Process manipulation and querying module"
 
-import sys, os
+import sys
+import os
+
 
 def chgProcessName(processName):
     if sys.platform == 'linux2':
@@ -16,14 +18,18 @@ def chgProcessName(processName):
     else:
         raise NotImplementedError("Operating System not detected/supported")
 
+
 def isRunning(processName):
     if sys.platform == 'linux2':
-        if not translate(processName): return False
-        else: return True
+        if not translate(processName):
+            return False
+        else:
+            return True
     elif sys.platform == 'win32':
         raise NotImplementedError("Windows is not supported")
     else:
         raise NotImplementedError("Operating System not detected/supported")
+
 
 def translate(processName):
     if sys.platform == 'linux2':
@@ -34,14 +40,15 @@ def translate(processName):
             pname = ret[-1]
         except IndexError:
             return False
-        if pname == processName: return str(pid)
-        else: return pname
+        if pname == processName:
+            return str(pid)
+        else:
+            return pname
     elif sys.platform == 'win32':
         raise NotImplementedError("Windows is not supported")
     else:
         raise NotImplementedError("Operating System not detected/supported")
 
+
 def getCurPid():
     return str(os.getpid())
-
-
