@@ -105,7 +105,7 @@ lock = False
         os.system(cmd)
 
     # Exit if an instance of this script is already running
-    ProcessName = "Video-Screensaver"
+    ProcessName = "Video-Screensav"
     if Process.isRunning(ProcessName):
         print("{} already running".format(ProcessName))
         sys.exit(1)
@@ -139,7 +139,7 @@ lock = False
     # Load the video list
     video_list = get_videos(video_directory, video_extensions)
     if not video_list:
-        print("No videos found")
+        print("No videos found, put some in {}".format(video_directory))
         sys.exit(1)
 
     # Play videos on a loop
