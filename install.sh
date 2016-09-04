@@ -27,7 +27,7 @@ chmod 755 $INSTALL_DIR/
 # Copy new default configuration
 echo
 echo "Installing new default configuration"
-/bin/cp -v ./video-screensaver.cfg $INSTALL_DIR/default.cfg
+/bin/cp -v ./default.cfg $INSTALL_DIR/default.cfg
 echo
 echo "Setting config file permissions"
 chown -v root:root $INSTALL_DIR/default.cfg

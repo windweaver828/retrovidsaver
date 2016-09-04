@@ -20,21 +20,28 @@ if __name__ == '__main__':
     # Load config settings
     CONFIGPATH = "/etc/video-screensaver.cfg"
     if not os.path.isfile(CONFIGPATH):
+        username = "root"
         timer = 10
-        lock_username = "root"
         message = "{} does not exist. Assuming defaults.".format(CONFIGPATH)
-        log(message, lock_username)
+        log(message, username)
     else:
         config = ConfigParser.ConfigParser()
         config.read(CONFIGPATH)
+
+        username = config.get("UserSettings", "username")
         timer = config.getint("UserSettings", "timer")
-        lock_username = config.get("UserSettings", "lock_username")
+
+    # Exit if we are not
+    if os.geteuid() != 0:
+        message = ("This script must be ran as root, try using sudo")
+        log(message, username)
+        sys.exit(1)
 
     # Exit if an instance of xautolock is already running
     ProcessName = "xautolock"
     if Process.isRunning(ProcessName):
         message = "{} already running".format(ProcessName)
-        log(message, lock_username)
+        log(message, username)
         sys.exit(1)
 
     cmd = 'xautolock -time {} -locker "sudo python2 /usr/local/bin/Video-Screensaver/screensaver.py" &'

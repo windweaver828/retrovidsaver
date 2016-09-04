@@ -2,6 +2,7 @@
 
 import sys
 import os
+import time
 import random
 import subprocess
 import signal
@@ -25,7 +26,7 @@ def play_videos(paths, user, player_command, player_args, shuffle, end_signal):
                     cmd.extend(player_args)
                     cmd.append(path)
                     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                except OSError as e:
+                except Exception as e:
                     print player_command
                     print player_args
                     print path
@@ -41,7 +42,7 @@ def get_videos(path, extensions):
     if os.path.exists(path):
         if not path.endswith(os.sep):
             path += os.sep
-        return [path + x for x in os.listdir(path) if x.split('.')[-1] in extensions]
+        return [path + x for x in sorted(os.listdir(path), key=alphanum_key) if x.split('.')[-1] in extensions]
 
 
 def monitor_input(input_device, queue, dummy):
@@ -68,6 +69,7 @@ def monitor_inputs(input_devices, dummy):
             for proc in processes:
                 proc.terminate()
             break
+        time.sleep(.5)
 
 
 def log(message, username):
@@ -80,10 +82,27 @@ def log(message, username):
         f.write(message + "\n")
         f.flush()
 
+
+# Used for sorting
+def alphanum_key(s):
+    from re import split as resplit
+    """ Turn a string into a list of string and number chunks.
+        "z23a" -> ["z", 23, "a"]
+    """
+    def tryint(s):
+        try:
+            return int(s)
+        except:
+            return s
+
+    return [tryint(c) for c in resplit('([0-9]+)', s)]
+
+
 if __name__ == '__main__':
     # Load config settings
     CONFIGPATH = "/etc/video-screensaver.cfg"
     if not os.path.isfile(CONFIGPATH):
+        username = "root"
         input_devices = ["/dev/input/event4",
                          "/dev/input/mouse0",
                          "/dev/input/js0",
@@ -92,17 +111,17 @@ if __name__ == '__main__':
         video_extensions = ["mp4", ]
         shuffle = True
         player_command = "omxplayer"
-        player_args = ""
+        player_args = list()
         timer = 10
         lock = False
-        lock_username = "root"
         input_dummy_amt = 7
         message = "{} does not exist. Assuming defaults.".format(CONFIGPATH)
-        log(message, lock_username)
+        log(message, username)
     else:
         config = ConfigParser.ConfigParser()
         config.read(CONFIGPATH)
 
+        username = config.get("UserSettings", "username")
         input_devices = config.get("UserSettings", "input_devices").split()
         video_directory = config.get("UserSettings", "video_directory")
         video_extensions = config.get("UserSettings", "video_extensions").split()
@@ -111,14 +130,13 @@ if __name__ == '__main__':
         player_args = config.get("UserSettings", "player_args").split()
         timer = config.getint("UserSettings", "timer")
         lock = config.getboolean("UserSettings", "lock")
-        lock_username = config.get("UserSettings", "lock_username")
         input_dummy_amt = config.getint("UserSettings", "input_dummy_amt")
 
     # Exit if an instance of this script is already running
     ProcessName = "Video-Screensav"
     if Process.isRunning(ProcessName):
         message = "{} already running".format(ProcessName)
-        log(message, lock_username)
+        log(message, username)
         sys.exit(1)
     # And change our process name so we are easily identifiable
     Process.chgProcessName(ProcessName)
@@ -135,7 +153,7 @@ if __name__ == '__main__':
     # Exit if no devices left
     if not input_devices:
         message = "None of the given input devices are available, check {}".format(CONFIGPATH)
-        log(message, lock_username)
+        log(message, username)
         sys.exit(1)
     # Load the video list
     video_list = get_videos(video_directory, video_extensions)
@@ -146,12 +164,13 @@ if __name__ == '__main__':
 
     # Play videos on a loop
     end_signal = threading.Event()
-    thread = threading.Thread(target=play_videos, args=(video_list, player_command, player_args, lock_username, shuffle, end_signal))
+
+    thread = threading.Thread(target=play_videos, args=(video_list, username, player_command, player_args, shuffle, end_signal))
     thread.start()
 
     # Lock the keyboard and mouse if enabled
     if lock:
-        os.popen("sudo -u {} xtrlock".format(lock_username))
+        os.popen("sudo -u {} xtrlock".format(username))
     locked = True  # Loop will check if it is really locked
 
     try:
@@ -165,7 +184,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt, SystemExit:
         pass
     except Exception as e:
-        log(e, lock_username)
+        log(e, username)
     finally:
         end_signal.set()
         thread.join()
