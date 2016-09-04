@@ -14,13 +14,32 @@ https://www.paypal.me/windweaver828/
 
 ### How do I get set up? ###
 
+- Note - This program runs with root priveleges
 * Dependencies
     - python2.7 - should be preinstalled on most linux systems
+    - cron - to run on boot
     - xautolock
     - xtrlock
+
+* Install Dependencies
+    - sudo apt-get install python2.7 cron xautolock xtrlock
+
+* Clone the repository
+    - cd ~
+    - git clone https://github.com/windweaver828/Video-Screensaver.git
+
+* Run the install script
+    - cd ~/Video-Screensaver/
+    - sudo ./install.sh
+
+* Run sudo /usr/local/bin/start-video-screensaver on boot
+
+* Use sudo /usr/local/bin/stop-video-screensaver to stop it
+
 ### Contribution guide
 
 * Send a pull request
+* Or a well documented email to me with subject "github video-controller"
 
 ### Who do I talk to? ###
 
