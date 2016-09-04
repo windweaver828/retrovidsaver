@@ -17,7 +17,7 @@ fi
 
 # Copy over program files
 echo "Copying files"
-/bin/cp -v ./screensaver.py ./Process.py ./start.py ./stop.sh $INSTALL_DIR/
+/bin/cp -v ./screensaver.py ./Process.py ./start ./stop $INSTALL_DIR/
 echo
 echo "Setting program permissions"
 chown -Rv root:root $INSTALL_DIR/
