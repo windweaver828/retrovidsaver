@@ -17,28 +17,36 @@ fi
 
 # Copy over program files
 echo "Copying files"
-/bin/cp -v ./screensaver.py ./Process.py ./start ./stop $INSTALL_DIR/
+/bin/cp ./screensaver.py ./Process.py ./start ./stop $INSTALL_DIR/
 echo
 echo "Setting program permissions"
-chown -Rv root:root $INSTALL_DIR/
-chmod -Rv 700 $INSTALL_DIR/
+chown -R root:root $INSTALL_DIR/
+chmod -R 700 $INSTALL_DIR/
 chmod 755 $INSTALL_DIR/
-
 # Copy new default configuration
-echo
-echo "Installing new default configuration"
-/bin/cp -v ./default.cfg $INSTALL_DIR/default.cfg
-echo
-echo "Setting config file permissions"
-chown -v root:root $INSTALL_DIR/default.cfg
-chmod -v 644 $INSTALL_DIR/default.cfg
-# and put it in /etc/video-screensaver.cfg
+/bin/cp ./default.cfg $INSTALL_DIR/default.cfg
+chown root:root $INSTALL_DIR/default.cfg
+chmod 644 $INSTALL_DIR/default.cfg
+# and put it in /etc/video-screensaver.cfg if there isn't one
 if [[ ! -f /etc/video-screensaver.cfg ]]; then
     echo
     echo "No configuration file detected"
     echo "Creating default configuration /etc/video-screensaver.cfg"
-    /bin/cp -v $INSTALL_DIR/default.cfg /etc/video-screensaver.cfg
+    /bin/cp $INSTALL_DIR/default.cfg /etc/video-screensaver.cfg
 fi
+
+# Create accessible starter and stopper functions
+echo "Creating links to starter and stopper functions"
+starter="/usr/local/bin/start-video-screensaver"
+if [[ -f $starter ]]; then
+    rm $starter
+fi
+ln -sv $INSTALL_DIR/start $starter
+stopper="/usr/local/bin/stop-video-screensaver"
+if [[ -f $stopper ]]; then
+    rm $stopper
+fi
+ln -sv $INSTALL_DIR/stop $stopper
 
 echo
 echo "Edit your config file as needed - sudo nano /etc/video-screensaver.cfg"
