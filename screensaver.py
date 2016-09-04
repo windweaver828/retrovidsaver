@@ -135,9 +135,8 @@ lock = False
     for device in input_devices:
         if not os.path.exists(device):
             print device
-            print("Bad device path, check the configuration")
-            sys.exit(1)
-
+            print("Bad device path, maybe something isn't plugged in.\nCheck your configuration")
+            input_devices.remove(device)
     # Load the video list
     video_list = get_videos(video_directory, video_extensions)
     if not video_list:
