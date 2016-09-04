@@ -45,10 +45,12 @@ def get_videos(path, extensions):
 
 
 def monitor_input(input_device, queue):
+    DUMMY_VALUE = 7
     FORMAT = "llHHI"
     EVENT_SIZE = struct.calcsize(FORMAT)
     f = open(input_device, 'rb')
-    f.read(EVENT_SIZE)
+    for _ in range(DUMMY_VALUE):
+        f.read(EVENT_SIZE)
     f.close()
     queue.put("DONE")
 
