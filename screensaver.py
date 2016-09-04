@@ -5,20 +5,30 @@ import os
 import random
 import subprocess
 import signal
-import threading
 import struct
+import threading
+import multiprocessing
 import ConfigParser
 import Process
 
 
-def play_videos(paths, player_command, end_signal):
+def play_videos(paths, player_command, player_args, end_signal):
+    user = os.path.expanduser("~").split(os.sep)[-1]
+    player_args = " ".join(player_args)
     while True:
         random.shuffle(paths)
         for path in paths:
             if end_signal.is_set():
                 return
             if os.path.isfile(path):
-                process = subprocess.Popen([player_command, path])
+                try:
+                    process = subprocess.Popen(["sudo", '-u', user, player_command, player_args, path])
+                except OSError as e:
+                    print player_command
+                    print player_args
+                    print path
+                    print(e)
+                    return
                 while process.poll():
                     if end_signal.is_set():
                         process.terminate()
@@ -32,31 +42,29 @@ def get_videos(path, extensions):
         return [path + x for x in os.listdir(path) if x.split('.')[-1] in extensions]
 
 
-def monitor_inputs(input_devices):
+def monitor_input(input_device, queue):
     FORMAT = "llHHI"
     EVENT_SIZE = struct.calcsize(FORMAT)
-    in_files = [open(x, "rb") for x in input_devices]
-    events = list()
+    f = open(input_device, 'rb')
+    f.read(EVENT_SIZE)
+    f.close()
+    queue.put("DONE")
+
+
+def monitor_inputs(input_devices):
+    queue = multiprocessing.Queue()
+    processes = list()
+    for input_device in input_devices:
+        proc = multiprocessing.Process(target=monitor_input, args=(input_device, queue))
+        proc.daemon = True
+        proc.start()
+        processes.append(proc)
+
     while True:
-        for f in in_files:
-            events.append(f.read(EVENT_SIZE))
-
-        # Uncomment below code for help detecting which input devices are actually doing anything
-
-        # for event in events[:]:
-        #     events.remove(event)
-        #     (tv_sec, tv_usec, type, code, value) = struct.unpack(FORMAT, event)
-
-        #     if type != 0 or code != 0 or value != 0:
-        #         print("Event type %u, code %u, value %u at %d.%d" % (type, code, value, tv_sec, tv_usec))
-        #     else:
-        #         # Events with code, type and value == 0 are "separator" events
-        #         print("===========================================")
-
-        # Exit once input is detected
-        if events:
+        if not queue.empty():
+            for proc in processes:
+                proc.terminate()
             break
-
 
 if __name__ == '__main__':
     default_config = """[UserSettings]
@@ -126,22 +134,21 @@ lock = False
 
     # Lock the keyboard and mouse if enabled
     if lock:
-        subprocess.Popen(["xtrlock"])
-        locked = True
-    else:
-        locked = False
+        os.popen("xtrlock")
+    locked = True  # Loop will check if it is really locked
 
     # Play videos on a loop
     end_signal = threading.Event()
-    thread = threading.Thread(target=play_videos, args=(video_list, player_command, end_signal))
+    thread = threading.Thread(target=play_videos, args=(video_list, player_command, player_args, end_signal))
     thread.start()
 
+    # Catch kill signal if we happen to get one
     def signal_term_handler(signal, frame):
         raise SystemExit
     signal.signal(signal.SIGTERM, signal_term_handler)
 
     try:
-        while True:
+        while locked:
             # Wait for a device to have input
             monitor_inputs(input_devices)
             if not Process.isRunning("xtrlock"):
