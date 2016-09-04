@@ -14,7 +14,6 @@ import Process
 
 def play_videos(paths, player_command, player_args, end_signal):
     user = os.path.expanduser("~").split(os.sep)[-1]
-    player_args = " ".join(player_args)
     while True:
         random.shuffle(paths)
         for path in paths:
@@ -22,14 +21,17 @@ def play_videos(paths, player_command, player_args, end_signal):
                 return
             if os.path.isfile(path):
                 try:
-                    process = subprocess.Popen(["sudo", '-u', user, player_command, player_args, path])
+                    cmd = ["sudo", "-u", user, player_command]
+                    cmd.extend(player_args)
+                    cmd.append(path)
+                    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 except OSError as e:
                     print player_command
                     print player_args
                     print path
                     print(e)
                     return
-                while process.poll():
+                while process.poll() is None:
                     if end_signal.is_set():
                         process.terminate()
                     end_signal.wait(.5)
@@ -84,8 +86,8 @@ player_command = omxplayer
 # For custom use so you can specify hdmi devices or window size etc if the default options dont work well
 player_args = ""
 
-# How many seconds of idle time before screensaver starts
-timer = 600
+# How many minutes of idle time before screensaver starts
+timer = 10
 
 # Whether to place a lock on the keyboard/mouse using xtrlock
 # Enter your user password and press enter to unlock
@@ -110,6 +112,11 @@ lock = False
     # And change our process name so we are easily identifiable
     Process.chgProcessName(ProcessName)
 
+    # Catch kill signal if we happen to get one
+    def signal_term_handler(signal, frame):
+        raise SystemExit
+    signal.signal(signal.SIGTERM, signal_term_handler)
+
     # Load config settings
     config = ConfigParser.ConfigParser()
     config.read(CONFIGPATH)
@@ -131,21 +138,19 @@ lock = False
 
     # Load the video list
     video_list = get_videos(video_directory, video_extensions)
-
-    # Lock the keyboard and mouse if enabled
-    if lock:
-        os.popen("xtrlock")
-    locked = True  # Loop will check if it is really locked
+    if not video_list:
+        print("No videos found")
+        sys.exit(1)
 
     # Play videos on a loop
     end_signal = threading.Event()
     thread = threading.Thread(target=play_videos, args=(video_list, player_command, player_args, end_signal))
     thread.start()
 
-    # Catch kill signal if we happen to get one
-    def signal_term_handler(signal, frame):
-        raise SystemExit
-    signal.signal(signal.SIGTERM, signal_term_handler)
+    # Lock the keyboard and mouse if enabled
+    if lock:
+        os.popen("xtrlock")
+    locked = True  # Loop will check if it is really locked
 
     try:
         while locked:
