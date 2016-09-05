@@ -47,5 +47,6 @@ https://www.paypal.me/windweaver828/
 
 ### Todo ###
 * Use /dev/input/by-path/* to get functional input devices
+* Inside ./install.sh add a root cron job to start the starter on boot
 ###* Everything is fully functional and complete at the moment
 
