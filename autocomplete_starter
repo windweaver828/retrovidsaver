@@ -1,0 +1,13 @@
+_start-video-screensaver()
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [[ ${cur} == start* ]] ; then
+        COMPREPLY=( $(compgen -W ${cur}) )
+        return 0
+    fi
+}
+complete -F _start-video-screensaver start-video-screensaver
