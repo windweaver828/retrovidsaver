@@ -46,6 +46,10 @@ input_dummy_amt = 7
 # Enter your user password and press enter to unlock
 lock = False
 
+Edit your config file as needed - sudo nano /etc/video-screensaver.cfg
+Any donations for the continued development of this program are welcome
+https://www.paypal.me/windweaver828/
+
 """
 
 
@@ -78,4 +82,8 @@ if __name__ == '__main__':
                                        player_command=player_command,
                                        player_args=player_args)
 
-    print(default_text)
+
+    with open("./default.cfg", 'w') as f:
+        f.write(default_text)
+        f.flush()
+

@@ -1,4 +1,5 @@
 # Ignore videos folder
+default.cfg
 videos/
 
 # Byte-compiled / optimized / DLL files

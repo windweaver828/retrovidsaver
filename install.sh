@@ -23,6 +23,14 @@ echo "Setting program permissions"
 chown -R root:root $INSTALL_DIR/
 chmod -R 700 $INSTALL_DIR/
 chmod 755 $INSTALL_DIR/
+
+# Delete default configuration if it exists
+if [[ -f "./default.cfg" ]]; then
+    rm "./default.cfg"
+fi
+# Generate new default configuration
+./gen_default.py
+
 # Copy new default configuration
 /bin/cp ./default.cfg $INSTALL_DIR/default.cfg
 chown root:root $INSTALL_DIR/default.cfg
@@ -49,6 +57,5 @@ fi
 ln -sv $INSTALL_DIR/stop $stopper
 
 echo
-echo "Edit your config file as needed - sudo nano /etc/video-screensaver.cfg"
-echo "Any donations for the continued development of this program are welcome"
-echo "https://www.paypal.me/windweaver828/"
+echo "Your default config looks like ---"
+cat "./default.cfg"
