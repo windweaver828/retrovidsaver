@@ -10,4 +10,4 @@ _stop-video-screensaver()
         return 0
     fi
 }
-complete -M _stop-video-screensaver stop-video-screensaver
+complete -F _stop-video-screensaver stop-video-screensaver
