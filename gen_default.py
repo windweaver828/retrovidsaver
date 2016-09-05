@@ -46,9 +46,9 @@ input_dummy_amt = 7
 # Enter your user password and press enter to unlock
 lock = False
 
-Edit your config file as needed - sudo nano /etc/video-screensaver.cfg
-Any donations for the continued development of this program are welcome
-https://www.paypal.me/windweaver828/
+# Edit your config file as needed - sudo nano /etc/video-screensaver.cfg
+# Any donations for the continued development of this program are welcome
+# https://www.paypal.me/windweaver828/
 
 """
 
