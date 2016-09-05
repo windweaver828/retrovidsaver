@@ -31,7 +31,7 @@ if __name__ == '__main__':
         username = config.get("UserSettings", "username")
         timer = config.getint("UserSettings", "timer")
 
-    # Exit if we are not
+    # Exit if we are not root
     if os.geteuid() != 0:
         message = ("This script must be ran as root, try using sudo")
         log(message, username)

@@ -24,10 +24,6 @@ chown -R root:root $INSTALL_DIR/
 chmod -R 700 $INSTALL_DIR/
 chmod 755 $INSTALL_DIR/
 
-# Delete default configuration if it exists
-if [[ -f "./default.cfg" ]]; then
-    rm "./default.cfg"
-fi
 # Generate new default configuration
 ./gen_default.py
 

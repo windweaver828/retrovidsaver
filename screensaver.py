@@ -132,6 +132,12 @@ if __name__ == '__main__':
         lock = config.getboolean("UserSettings", "lock")
         input_dummy_amt = config.getint("UserSettings", "input_dummy_amt")
 
+    # Exit if we are not root
+    if os.geteuid() != 0:
+        message = ("This script must be ran as root, try using sudo")
+        log(message, username)
+        sys.exit(1)
+
     # Exit if an instance of this script is already running
     ProcessName = "Video-Screensav"
     if Process.isRunning(ProcessName):
