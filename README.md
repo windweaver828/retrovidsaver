@@ -46,5 +46,6 @@ https://www.paypal.me/windweaver828/
 * Keith Brandenburg - windweaver828@gmail.com
 
 ### Todo ###
+* Use /dev/input/by-path/* to get functional input devices
+###* Everything is fully functional and complete at the moment
 
-* Everything is fully functional and complete at the moment
