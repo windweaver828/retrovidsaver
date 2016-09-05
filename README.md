@@ -47,4 +47,5 @@ https://www.paypal.me/windweaver828/
 
 ### Todo ###
 * Inside ./install.sh add a root cron job to start the starter on boot
+* Get autocompletion working
 
