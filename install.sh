@@ -52,6 +52,11 @@ if [[ -f $stopper ]]; then
 fi
 ln -sv $INSTALL_DIR/stop $stopper
 
+# Copy files for autocomplete of starter and stopper scripts
+echo "Copy autocompletion files"
+cp ./autocomplete_starter /etc/bash_completion.d/start-video-screensaver
+cp ./autocomplete_stopper /etc/bash_completion.d/stop-video-screensaver
+
 echo
 echo "Your default config looks like ---"
 cat "./default.cfg"
