@@ -20,9 +20,10 @@ https://www.paypal.me/windweaver828/
     - cron - to run on boot
     - xautolock
     - xtrlock
+    - xbacklight
 
 * Install Dependencies
-    - sudo apt-get install python2.7 cron xautolock xtrlock
+    - sudo apt-get install python2.7 cron xautolock xtrlock xbacklight
 
 * Clone the repository
     - cd ~
@@ -31,8 +32,6 @@ https://www.paypal.me/windweaver828/
 * Run the install script
     - cd ~/Video-Screensaver/
     - sudo ./install.sh
-
-* Run sudo /usr/local/bin/start-video-screensaver on boot
 
 * Use sudo /usr/local/bin/stop-video-screensaver to stop it
 
@@ -46,6 +45,6 @@ https://www.paypal.me/windweaver828/
 * Keith Brandenburg - windweaver828@gmail.com
 
 ### Todo ###
-* Inside ./install.sh add a root cron job to start the starter on boot
 * Get autocompletion working
+* Add in xbacklight, screen brightness settings
 
