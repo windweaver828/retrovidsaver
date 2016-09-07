@@ -42,7 +42,9 @@ https://www.paypal.me/windweaver828/
 
 Copy in any videos you would like to play, making sure the extensions are supported by your player of choice and are listed in your /etc/video-screensaver.cfg file, there is a decent small list of commonly supported extensions pre listed for you.
 
-* Use sudo /usr/local/bin/stop-video-screensaver to stop it
+* Manual starting and stopping of screensaver
+    - Use sudo start-video-screensaver to start
+    - Use sudo stop-video-screensaver to stop
 
 ### Contribution guide
 
