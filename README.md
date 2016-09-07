@@ -18,9 +18,9 @@ https://www.paypal.me/windweaver828/
 * Dependencies
     - python2.7 - should be preinstalled on most linux systems
     - cron - to run on boot
-    - xautolock
-    - xtrlock
-    - xbacklight
+    - xautolock - starts the screensaver after so long of idle time
+    - xtrlock - optionally locks keyboard and mouse on screensaver
+    - xbacklight - sets display brightness for screensaver
 
 * Install Dependencies
     - sudo apt-get install python2.7 cron xautolock xtrlock xbacklight
@@ -29,9 +29,18 @@ https://www.paypal.me/windweaver828/
     - cd ~
     - git clone https://github.com/windweaver828/Video-Screensaver.git
 
+* At this point before running the installer script, make sure any keyboards/mice, joysticks, or controllers you want to be able to turn off the screensaver, are plugged in at the time of the install. You may run the install as often as you need just remember to delete the /etc/video-screensaver.cfg file before running the install script
 * Run the install script
     - cd ~/Video-Screensaver/
     - sudo ./install.sh
+
+* Check your config file in (sudo nano) /etc/video-screensaver.cfg for any changes you may need and reboot. It should be started automatically, the default timer is set for 10 minutes.
+
+* Add videos
+    - cd ~/Video-Screensaver/
+    - mkdir videos
+
+Copy in any videos you would like to play, making sure the extensions are supported by your player of choice and are listed in your /etc/video-screensaver.cfg file, there is a decent small list of commonly supported extensions pre listed for you.
 
 * Use sudo /usr/local/bin/stop-video-screensaver to stop it
 
