@@ -25,7 +25,7 @@ def play_videos(paths, user, player_command, player_args, shuffle, end_signal):
                     cmd = ["sudo", "-u", user, player_command]
                     cmd.extend(player_args)
                     cmd.append(path)
-                    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
                 except Exception as e:
                     print player_command
                     print player_args
@@ -35,6 +35,10 @@ def play_videos(paths, user, player_command, player_args, shuffle, end_signal):
                 while process.poll() is None:
                     if end_signal.is_set():
                         process.terminate()
+                        # time.sleep(.5)
+                        if process.poll() is None:
+                            cmd = "pkill " + player_command.split(os.sep)[-1]
+                            os.popen(cmd)
                     end_signal.wait(.5)
 
 
