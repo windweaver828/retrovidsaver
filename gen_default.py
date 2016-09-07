@@ -39,7 +39,7 @@ timer = 10
 # tolerance if it seems to immediately exit when videos
 # start to play, and decrease it when you have to input
 # more than you would like before it exits
-input_dummy_amt = 5
+input_dummy_amt = 7
 
 # Whether to place a lock on the keyboard/mouse using xtrlock
 # Enter your user password and press enter to unlock
