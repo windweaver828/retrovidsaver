@@ -35,7 +35,7 @@ def play_videos(paths, user, player_command, player_args, shuffle, end_signal):
                 while process.poll() is None:
                     if end_signal.is_set():
                         process.terminate()
-                        # time.sleep(.5)
+                        time.sleep(.2)
                         if process.poll() is None:
                             cmd = "pkill " + player_command.split(os.sep)[-1]
                             os.popen(cmd)
@@ -53,6 +53,8 @@ def monitor_input(input_device, queue, dummy):
     FORMAT = "llHHI"
     EVENT_SIZE = struct.calcsize(FORMAT)
     f = open(input_device, 'rb')
+    # code to read in initial flood of bytes before waiting on a read
+    # so dummy value isn't necessary anymore..
     for _ in range(dummy):
         f.read(EVENT_SIZE)
     f.close()
