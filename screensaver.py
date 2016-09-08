@@ -56,7 +56,7 @@ def monitor_input(input_device, queue, dummy):
     # code to read in initial flood of bytes before waiting on a read
     # so dummy value isn't necessary anymore..
     for _ in range(dummy):
-        f.read(EVENT_SIZE)
+        print(f.read(EVENT_SIZE))
     f.close()
     queue.put("DONE")
 
