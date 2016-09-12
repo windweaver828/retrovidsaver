@@ -52,6 +52,10 @@ lock = False
 """
 
 
+def get_users():
+    if os.path.isdir("/home/"):
+        return os.listdir("/home/")
+
 def get_nondirs(path):
     devices = list()
     if not path.endswith(os.sep):
@@ -74,6 +78,7 @@ if __name__ == '__main__':
         os.remove("./default.cfg")
 
     # Enumerate smart default settings
+    # Get username here
     username = os.path.expanduser("~").split(os.sep)[-1]
     video_directory = os.path.expanduser("~/Video-Screensaver/videos/")
     if os.path.isdir("/dev/input/by-path/"):
