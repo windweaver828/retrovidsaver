@@ -18,23 +18,33 @@ https://www.paypal.me/windweaver828/
 * Dependencies
     - python2.7 - should be preinstalled on most linux systems
     - cron - to run on boot
-    - xautolock
-    - xtrlock
+    - xautolock - starts the screensaver after so long of idle time
+    - xtrlock - optionally locks keyboard and mouse on screensaver
+    - xbacklight - sets display brightness for screensaver
 
 * Install Dependencies
-    - sudo apt-get install python2.7 cron xautolock xtrlock
+    - sudo apt-get install python2.7 cron xautolock xtrlock xbacklight
 
 * Clone the repository
     - cd ~
     - git clone https://github.com/windweaver828/Video-Screensaver.git
 
+* At this point before running the installer script, make sure any keyboards/mice, joysticks, or controllers you want to be able to turn off the screensaver, are plugged in at the time of the install. You may run the install as often as you need just remember to delete the /etc/video-screensaver.cfg file before running the install script
 * Run the install script
     - cd ~/Video-Screensaver/
     - sudo ./install.sh
 
-* Run sudo /usr/local/bin/start-video-screensaver on boot
+* Check your config file in (sudo nano) /etc/video-screensaver.cfg for any changes you may need and reboot. It should be started automatically, the default timer is set for 10 minutes.
 
-* Use sudo /usr/local/bin/stop-video-screensaver to stop it
+* Add videos
+    - cd ~/Video-Screensaver/
+    - mkdir videos
+
+Copy in any videos you would like to play, making sure the extensions are supported by your player of choice and are listed in your /etc/video-screensaver.cfg file, there is a decent small list of commonly supported extensions pre listed for you.
+
+* Manual starting and stopping of screensaver
+    - Use sudo start-video-screensaver to start
+    - Use sudo stop-video-screensaver to stop
 
 ### Contribution guide
 
@@ -46,6 +56,7 @@ https://www.paypal.me/windweaver828/
 * Keith Brandenburg - windweaver828@gmail.com
 
 ### Todo ###
-* Inside ./install.sh add a root cron job to start the starter on boot
 * Get autocompletion working
+* Add in xbacklight, screen brightness settings
+* Try to fix input monitor so that a dummy value isn't necessary, some kind of logic to read in x bytes if they are there upon first reading from device
 

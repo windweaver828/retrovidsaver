@@ -39,7 +39,7 @@ timer = 10
 # tolerance if it seems to immediately exit when videos
 # start to play, and decrease it when you have to input
 # more than you would like before it exits
-input_dummy_amt = 5
+input_dummy_amt = 7
 
 # Whether to place a lock on the keyboard/mouse using xtrlock
 # Enter your user password and press enter to unlock
@@ -51,6 +51,10 @@ lock = False
 
 """
 
+
+def get_users():
+    if os.path.isdir("/home/"):
+        return os.listdir("/home/")
 
 def get_nondirs(path):
     devices = list()
@@ -74,6 +78,7 @@ if __name__ == '__main__':
         os.remove("./default.cfg")
 
     # Enumerate smart default settings
+    # Get username here
     username = os.path.expanduser("~").split(os.sep)[-1]
     video_directory = os.path.expanduser("~/Video-Screensaver/videos/")
     if os.path.isdir("/dev/input/by-path/"):
