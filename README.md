@@ -46,6 +46,8 @@ Copy in any videos you would like to play, making sure the extensions are suppor
     - Use sudo start-video-screensaver to start
     - Use sudo stop-video-screensaver to stop
 
+* To uninstall
+    - Simply run uninstall.sh as root, or with sudo
 ### Contribution guide
 
 * Send a pull request
