@@ -10,13 +10,13 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Remove whole install directory if needed
-if [[ ! -d $INSTALL_DIR ]]; then
+if [[ -d $INSTALL_DIR ]]; then
     echo "Removing $INSTALL_DIR/"
     rm -rf $INSTALL_DIR
 fi
 
 # Remove configuration file
-if [[ ! -f /etc/video-screensaver.cfg ]]; then
+if [[ -f /etc/video-screensaver.cfg ]]; then
     echo "Removing /etc/video-screensaver.cfg"
     rm /etc/video-screensaver.cfg
 fi
