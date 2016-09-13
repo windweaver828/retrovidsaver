@@ -53,8 +53,13 @@ lock = False
 
 
 def get_users():
+    users = list()
+    if os.path.isdir("/root/"):
+        users.append("root")
     if os.path.isdir("/home/"):
-        return os.listdir("/home/")
+        users.extend(os.listdir("/home/"))
+    return users
+
 
 def get_nondirs(path):
     devices = list()
@@ -72,14 +77,40 @@ def which(name):
     return [line.strip() for line in os.popen("which {}".format(name)).readlines()]
 
 
+def choice(header, choices_list, footer):
+    print(header)
+    choices_dict = dict()
+    for num, item in enumerate(choices_list):
+        print("{}) {}".format(num + 1, item))
+        choices_dict[num + 1] = item
+
+    while True:
+        try:
+            choice_num = raw_input(footer)
+            choice_num = int(choice_num)
+            if not 0 < choice_num <= len(choices_dict.keys()):
+                print("Choice not in range [{}-{}]".format(1, len(choices_dict.keys())))
+                continue
+            choice = choices_dict[choice_num]
+            break
+        except ValueError:
+            print("You must input a number")
+            continue
+        except Exception as e:
+            print(e)
+            sys.exit(1)
+    return choice
+
 if __name__ == '__main__':
     # Remove default.cfg if it exists
     if os.path.isfile("./default.cfg"):
         os.remove("./default.cfg")
 
     # Enumerate smart default settings
-    # Get username here
-    username = os.path.expanduser("~").split(os.sep)[-1]
+    users = get_users()
+    header = "Which user would you like to use? Note - Do not use root unless you have to, typically you would want to use your standard user name"
+    footer = "User Number: "
+    username = choice(header, users, footer)
     video_directory = os.path.expanduser("~/Video-Screensaver/videos/")
     if os.path.isdir("/dev/input/by-path/"):
         input_devices = get_nondirs("/dev/input/by-path/")
@@ -115,28 +146,12 @@ if __name__ == '__main__':
     elif len(player_commands.keys()) == 1:
         player_command, player_args = player_commands[player_commands.keys()[0]]
     else:
-        print("Multiple player programs detected, which would you like to use?")
+        header = "Multiple player programs detected, which would you like to use?"
+        footer = "Program number: "
+        player_command = choice(header, player_commands.keys(), footer)
+        player_command, player_args = player_commands[player_command]
 
-        choices = dict()
-        for num, program_name in enumerate(player_commands.keys()):
-            print("{}) {}".format(num + 1, program_name))
-            choices[num + 1] = program_name
-
-        while True:
-            try:
-                choice = raw_input("Program number: ")
-                choice = int(choice)
-                if not 0 < choice <= len(choices.keys()):
-                    print("Choice not in range [{}-{}]".format(1, len(choices.keys())))
-                    continue
-                player_command, player_args = player_commands[choices[choice]]
-                break
-            except ValueError:
-                print("You must input a number")
-                continue
-            except Exception as e:
-                print(e)
-                sys.exit(1)
+    # Format the default text with sane values
     default_text = default_text.format(username=username,
                                        input_devices=input_devices,
                                        video_directory=video_directory,
