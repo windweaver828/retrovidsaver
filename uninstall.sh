@@ -22,26 +22,32 @@ if [[ ! -f /etc/video-screensaver.cfg ]]; then
 fi
 
 # Remove starter and stopper functions
-echo "Removing links to starter and stopper functions"
 starter="/usr/local/bin/start-video-screensaver"
 if [[ -f $starter ]]; then
+    echo "Removing links to starter function"
     rm $starter
 fi
 stopper="/usr/local/bin/stop-video-screensaver"
 if [[ -f $stopper ]]; then
+    echo "Removing links to stopper function"
     rm $stopper
 fi
 
 # Remove files for autocomplete of starter and stopper scripts
-echo "Remove autocompletion files"
-rm /etc/bash_completion.d/start-video-screensaver
-rm /etc/bash_completion.d/stop-video-screensaver
+if [[ -f /etc/bash_completion.d/start-video-screensaver ]]; then
+    echo "Remove autocompletion starter file"
+    rm /etc/bash_completion.d/start-video-screensaver
+fi
+if [[ -f /etc/bash_completion.d/stop-video-screensaver ]]; then
+    echo "Remove autocompletion stopper file"
+    rm /etc/bash_completion.d/stop-video-screensaver
+fi
 
-# Add cron job to start screensaver on boot if not in there already
+# Recommend manual removal of cron job if it exists
+echo
 crontab -l > /tmp/curcronfile.txt
 if grep -R "@reboot /usr/local/bin/start-video-screensaver" /tmp/curcronfile.txt; then
-    echo "You should run sudo crontab -e and remove the line below"
-    echo '@reboot /usr/local/bin/start-video-screensaver'
+    echo "You should run sudo crontab -e and remove the line above"
 fi
 
 rm /tmp/curcronfile.txt
