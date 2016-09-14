@@ -43,14 +43,11 @@ if [[ -f /etc/bash_completion.d/stop-video-screensaver ]]; then
     rm /etc/bash_completion.d/stop-video-screensaver
 fi
 
-# Recommend manual removal of cron job if it exists
+# Recommend manual removal of rc.local job if it exists
 echo
-crontab -l > /tmp/curcronfile.txt
-if grep -R "@reboot /usr/local/bin/start-video-screensaver" /tmp/curcronfile.txt; then
-    echo "You should run sudo crontab -e and remove the line above"
+if grep -R "/usr/local/bin/start-video-screensaver" /etc/rc.local; then
+    echo "You should run sudo nano /etc/rc.local and remove the line above"
 fi
-
-rm /tmp/curcronfile.txt
 
 echo
 echo "Uninstall completed."

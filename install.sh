@@ -57,15 +57,16 @@ echo "Copy autocompletion files"
 cp ./autocomplete_starter /etc/bash_completion.d/start-video-screensaver
 cp ./autocomplete_stopper /etc/bash_completion.d/stop-video-screensaver
 
-# Add cron job to start screensaver on boot if not in there already
-crontab -l > /tmp/curcronfile.txt
-if ! grep -R "@reboot /usr/local/bin/start-video-screensaver" /tmp/curcronfile.txt; then
-    echo "Adding start job to cron"
-    echo '@reboot /usr/local/bin/start-video-screensaver' >> /tmp/curcronfile.txt
-    crontab < /tmp/curcronfile.txt
+# Add job to rc.local start screensaver on boot if not in there already
+cat /etc/rc.local > /tmp/currclocalfile.txt
+if ! grep -R "/usr/local/bin/start-video-screensaver" /tmp/curcronfile.txt; then
+    echo "Adding start job to /etc/rc.local"
+    echo '/usr/local/bin/start-video-screensaver' >> /tmp/currclocalfile.txt
+    cp /tmp/currclocalfile.txt /etc/rc.local
+    chmod +x /etc/rc.local
 fi
 
-rm /tmp/curcronfile.txt
+rm /tmp/currclocalfile.txt
 
 echo
 echo "Your default config looks like ---"
