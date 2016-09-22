@@ -3,6 +3,7 @@
 import sys
 import os
 import time
+import datetime
 import random
 import subprocess
 import signal
@@ -53,36 +54,10 @@ def monitor_input(input_device, queue, end_signal):
     FORMAT = "llHHI"
     EVENT_SIZE = struct.calcsize(FORMAT)
     f = open(input_device, 'rb')
-    # code to read in initial flood of bytes before waiting on a read
-    # so dummy value isn't necessary anymore..
     while not end_signal.is_set():
         f.read(EVENT_SIZE)
         queue.put("RESET")
-
-
-# def monitor_inputs(input_devices, dummy):
-#     queue = multiprocessing.Queue()
-#     processes = list()
-#     for input_device in input_devices:
-#         proc = multiprocessing.Process(target=monitor_input, args=(input_device, queue, dummy))
-#         proc.daemon = True
-#         proc.start()
-#         processes.append(proc)
-
-#     while True:
-#         if not queue.empty():
-#             for proc in processes:
-#                 proc.terminate()
-#             break
-#         time.sleep(.7)
-
-
-def monitor_inputs(input_devices):
-    end_signal = threading.Event()
-    queue = Queue.Queue()
-    for device in input_devices:
-        thread = threading.Thread(target=monitor_input, args=(device, queue, end_signal))
-        thread.start()
+    f.close()
 
 
 def log(message, username):
@@ -112,6 +87,10 @@ def alphanum_key(s):
 
 
 if __name__ == '__main__':
+    # Set this signal off at any point in the program to tell all threads and processes to end
+    end_signal = threading.Event()
+    locked = False  # Start off unlocked
+
     # Load config settings
     CONFIGPATH = "/etc/video-screensaver.cfg"
     if not os.path.isfile(CONFIGPATH):
@@ -125,9 +104,8 @@ if __name__ == '__main__':
         shuffle = True
         player_command = "omxplayer"
         player_args = list()
-        timer = 10
+        timer = 10 * 60
         lock = False
-        input_dummy_amt = 7
         message = "{} does not exist. Assuming defaults.".format(CONFIGPATH)
         log(message, username)
     else:
@@ -141,9 +119,8 @@ if __name__ == '__main__':
         shuffle = config.getboolean("UserSettings", "shuffle")
         player_command = config.get("UserSettings", "player_command")
         player_args = config.get("UserSettings", "player_args").split()
-        timer = config.getint("UserSettings", "timer")
+        timer = config.getint("UserSettings", "timer") * 60
         lock = config.getboolean("UserSettings", "lock")
-        input_dummy_amt = config.getint("UserSettings", "input_dummy_amt")
 
     # Exit if we are not root
     if os.geteuid() != 0:
@@ -181,21 +158,40 @@ if __name__ == '__main__':
         log(msg)
         sys.exit(1)
 
-    # Play videos on a loop
-    end_signal = threading.Event()
-
-    thread = threading.Thread(target=play_videos, args=(video_list, username, player_command, player_args, shuffle, end_signal))
-    thread.start()
-
-    # Lock the keyboard and mouse if enabled
-    if lock:
-        os.popen("sudo -u {} xtrlock".format(username))
-    locked = True  # Loop will check if it is really locked
+    # Create input watcher threads and start tracking time
+    control_time = datetime.datetime.now()
+    threads = list()
+    queue = Queue.Queue()  # Queue to watch to know when we have input devices active
+    for device in input_devices:
+        thread = threading.Thread(target=monitor_input, args=(device, queue, end_signal))
+        thread.start()
+        threads.append(thread)
 
     try:
-        while locked:
-            # Wait for a device to have input
-            monitor_inputs(input_devices, input_dummy_amt)
+        while True:
+            if end_signal.is_set():
+                break
+            if not queue.empty():  # Input received
+                queue.get()
+                if locked:
+                    # Check if xtrlock has been unlocked yet
+                    if not Process.isRunning("xtrlock"):
+                        locked = False
+                else:
+                    # Reset the timer on every input unless already running videos
+                    if not locked:
+                        control_time = datetime.datetime.now()
+            else:
+                # Target time reached, play videos
+                if (datetime.datetime.now() - control_time).total_seconds() >= timer:
+                    thread = threading.Thread(target=play_videos, args=(video_list, username, player_command, player_args, shuffle, end_signal))
+                    thread.start()
+                    threads.append(thread)
+                    if lock:
+                        os.popen("sudo -u {} xtrlock".format(username))
+                    locked = True
+            time.sleep(.7)
+
             if not Process.isRunning("xtrlock"):
                 locked = False
             if not locked:
@@ -205,5 +201,7 @@ if __name__ == '__main__':
     except Exception as e:
         log(e, username)
     finally:
+        # Wait for all threads to end cleanly
         end_signal.set()
-        thread.join()
+        for thread in threads:
+            thread.join()
