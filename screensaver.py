@@ -55,8 +55,8 @@ def monitor_input(input_device, queue, end_signal):
     EVENT_SIZE = struct.calcsize(FORMAT)
     f = open(input_device, 'rb')
     while not end_signal.is_set():
-        f.read(EVENT_SIZE)
-        queue.put("RESET")
+        ret = f.read(EVENT_SIZE)
+        queue.put(ret)
     f.close()
 
 
@@ -89,6 +89,7 @@ def alphanum_key(s):
 if __name__ == '__main__':
     # Set this signal off at any point in the program to tell all threads and processes to end
     end_signal = threading.Event()
+    video_end_signal = threading.Event()
     locked = False  # Start off unlocked
 
     # Load config settings
@@ -106,7 +107,7 @@ if __name__ == '__main__':
         player_args = list()
         timer = 10 * 60
         lock = False
-        message = "{} does not exist. Assuming defaults.".format(CONFIGPATH)
+        message = "{} does not exist. Assuming defaults. They probably won't work by the way".format(CONFIGPATH)
         log(message, username)
     else:
         config = ConfigParser.ConfigParser()
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     if Process.isRunning(ProcessName):
         message = "{} already running".format(ProcessName)
         log(message, username)
-        sys.exit(1)
+        # sys.exit(1)
     # And change our process name so we are easily identifiable
     Process.chgProcessName(ProcessName)
 
@@ -172,30 +173,27 @@ if __name__ == '__main__':
             if end_signal.is_set():
                 break
             if not queue.empty():  # Input received
-                queue.get()
+                print("Input received:\n{}".format(queue.get()))
                 if locked:
                     # Check if xtrlock has been unlocked yet
                     if not Process.isRunning("xtrlock"):
+                        video_end_signal.set()
                         locked = False
                 else:
-                    # Reset the timer on every input unless already running videos
-                    if not locked:
-                        control_time = datetime.datetime.now()
+                    # Reset the timer on every input if not locked
+                    control_time = datetime.datetime.now()
             else:
-                # Target time reached, play videos
+                # Play videos if no input after timer expired and set the lock
                 if (datetime.datetime.now() - control_time).total_seconds() >= timer:
-                    thread = threading.Thread(target=play_videos, args=(video_list, username, player_command, player_args, shuffle, end_signal))
-                    thread.start()
-                    threads.append(thread)
+
+                    video_end_signal = threading.Event()
+                    video_thread = threading.Thread(target=play_videos, args=(video_list, username, player_command, player_args, shuffle, video_end_signal))
+                    video_thread.start()
+                    threads.append(video_thread)
                     if lock:
                         os.popen("sudo -u {} xtrlock".format(username))
                     locked = True
             time.sleep(.7)
-
-            if not Process.isRunning("xtrlock"):
-                locked = False
-            if not locked:
-                break
     except KeyboardInterrupt, SystemExit:
         pass
     except Exception as e:
@@ -203,5 +201,6 @@ if __name__ == '__main__':
     finally:
         # Wait for all threads to end cleanly
         end_signal.set()
+        print("End signal set.. Waiting for threads to exit")
         for thread in threads:
             thread.join()
