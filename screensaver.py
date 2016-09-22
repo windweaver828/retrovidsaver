@@ -8,7 +8,7 @@ import subprocess
 import signal
 import struct
 import threading
-import multiprocessing
+import Queue
 import ConfigParser
 import Process
 
@@ -35,7 +35,7 @@ def play_videos(paths, user, player_command, player_args, shuffle, end_signal):
                 while process.poll() is None:
                     if end_signal.is_set():
                         process.terminate()
-                        time.sleep(.2)
+                        time.sleep(.3)
                         if process.poll() is None:
                             cmd = "pkill " + player_command.split(os.sep)[-1]
                             os.popen(cmd)
@@ -49,33 +49,40 @@ def get_videos(path, extensions):
         return [path + x for x in sorted(os.listdir(path), key=alphanum_key) if x.split('.')[-1] in extensions]
 
 
-def monitor_input(input_device, queue, dummy):
+def monitor_input(input_device, queue, end_signal):
     FORMAT = "llHHI"
     EVENT_SIZE = struct.calcsize(FORMAT)
     f = open(input_device, 'rb')
     # code to read in initial flood of bytes before waiting on a read
     # so dummy value isn't necessary anymore..
-    for _ in range(dummy):
+    while not end_signal.is_set():
         f.read(EVENT_SIZE)
-    f.close()
-    queue.put("DONE")
+        queue.put("RESET")
 
 
-def monitor_inputs(input_devices, dummy):
-    queue = multiprocessing.Queue()
-    processes = list()
-    for input_device in input_devices:
-        proc = multiprocessing.Process(target=monitor_input, args=(input_device, queue, dummy))
-        proc.daemon = True
-        proc.start()
-        processes.append(proc)
+# def monitor_inputs(input_devices, dummy):
+#     queue = multiprocessing.Queue()
+#     processes = list()
+#     for input_device in input_devices:
+#         proc = multiprocessing.Process(target=monitor_input, args=(input_device, queue, dummy))
+#         proc.daemon = True
+#         proc.start()
+#         processes.append(proc)
 
-    while True:
-        if not queue.empty():
-            for proc in processes:
-                proc.terminate()
-            break
-        time.sleep(.5)
+#     while True:
+#         if not queue.empty():
+#             for proc in processes:
+#                 proc.terminate()
+#             break
+#         time.sleep(.7)
+
+
+def monitor_inputs(input_devices):
+    end_signal = threading.Event()
+    queue = Queue.Queue()
+    for device in input_devices:
+        thread = threading.Thread(target=monitor_input, args=(device, queue, end_signal))
+        thread.start()
 
 
 def log(message, username):
