@@ -17,7 +17,7 @@ fi
 
 # Copy over program files
 echo "Copying files"
-/bin/cp ./screensaver.py ./Process.py ./start ./stop $INSTALL_DIR/
+/bin/cp ./screensaver.py ./Process.py ./video-screensaver $INSTALL_DIR/
 echo
 echo "Setting program permissions"
 chown -R root:root $INSTALL_DIR/
@@ -39,34 +39,13 @@ if [[ ! -f /etc/video-screensaver.cfg ]]; then
     /bin/cp $INSTALL_DIR/default.cfg /etc/video-screensaver.cfg
 fi
 
-# Create accessible starter and stopper functions
-echo "Creating links to starter and stopper functions"
-starter="/usr/local/bin/start-video-screensaver"
+# Create accessible starter and stopper function
+echo "Creating link to starter and stopper function"
+starter="/usr/local/bin/video-screensaver"
 if [[ -f $starter ]]; then
     rm $starter
 fi
-ln -sv $INSTALL_DIR/start $starter
-stopper="/usr/local/bin/stop-video-screensaver"
-if [[ -f $stopper ]]; then
-    rm $stopper
-fi
-ln -sv $INSTALL_DIR/stop $stopper
-
-# Copy files for autocomplete of starter and stopper scripts
-echo "Copy autocompletion files"
-cp ./autocomplete_starter /etc/bash_completion.d/start-video-screensaver
-cp ./autocomplete_stopper /etc/bash_completion.d/stop-video-screensaver
-
-# Add job to rc.local start screensaver on boot if not in there already
-cat /etc/rc.local > /tmp/currclocalfile.txt
-if ! grep -R "/usr/local/bin/start-video-screensaver" /tmp/curcronfile.txt; then
-    echo "Adding start job to /etc/rc.local"
-    echo '/usr/local/bin/start-video-screensaver' >> /tmp/currclocalfile.txt
-    cp /tmp/currclocalfile.txt /etc/rc.local
-    chmod +x /etc/rc.local
-fi
-
-rm /tmp/currclocalfile.txt
+ln -sv $INSTALL_DIR/video-screensaver $starter
 
 echo
 echo "Your default config looks like ---"

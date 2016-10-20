@@ -21,32 +21,11 @@ if [[ -f /etc/video-screensaver.cfg ]]; then
     rm /etc/video-screensaver.cfg
 fi
 
-# Remove starter and stopper functions
-starter="/usr/local/bin/start-video-screensaver"
+# Remove starter and stopper function
+starter="/usr/local/bin/video-screensaver"
 if [[ -f $starter ]]; then
-    echo "Removing links to starter function"
+    echo "Removing link to starter and stopper function"
     rm $starter
-fi
-stopper="/usr/local/bin/stop-video-screensaver"
-if [[ -f $stopper ]]; then
-    echo "Removing links to stopper function"
-    rm $stopper
-fi
-
-# Remove files for autocomplete of starter and stopper scripts
-if [[ -f /etc/bash_completion.d/start-video-screensaver ]]; then
-    echo "Remove autocompletion starter file"
-    rm /etc/bash_completion.d/start-video-screensaver
-fi
-if [[ -f /etc/bash_completion.d/stop-video-screensaver ]]; then
-    echo "Remove autocompletion stopper file"
-    rm /etc/bash_completion.d/stop-video-screensaver
-fi
-
-# Recommend manual removal of rc.local job if it exists
-echo
-if grep -R "/usr/local/bin/start-video-screensaver" /etc/rc.local; then
-    echo "You should run sudo nano /etc/rc.local and remove the line above"
 fi
 
 echo
