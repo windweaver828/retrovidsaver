@@ -177,7 +177,7 @@ class MyDaemon(Daemon):
                 log(message, username)
                 sys.exit(1)
 
-            cmd = 'sudo xautolock -time {} -locker "/usr/local/bin/Video-Screensaver/screensaver.py"'.format(timer)
+            cmd = 'xautolock -time {} -locker "sudo /usr/local/bin/Video-Screensaver/screensaver.py"'.format(timer)
             os.system(cmd)
 
     def stop(self):

@@ -39,7 +39,7 @@ if [[ ! -f /etc/video-screensaver.cfg ]]; then
     /bin/cp $INSTALL_DIR/default.cfg /etc/video-screensaver.cfg
 fi
 
-# Create accessible starter and stopper function
+# Create accessible starter and stopper service function
 echo "Creating link to starter and stopper function"
 starter="/usr/local/bin/video-screensaver"
 if [[ -f $starter ]]; then
@@ -47,6 +47,7 @@ if [[ -f $starter ]]; then
 fi
 ln -sv $INSTALL_DIR/video-screensaver $starter
 
+# Make service usable with sudo by anyone without authentication
 echo
-echo "Your default config looks like ---"
-cat "./default.cfg"
+echo "Adding service to sudoers file so xautolock can run it with sudo"
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/Video-Screensaver/video-screensaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
