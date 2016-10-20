@@ -17,7 +17,7 @@ https://www.paypal.me/windweaver828/
 - Note - This program runs with root priveleges
 * Dependencies
     - python2.7 - should be preinstalled on most linux systems
-    - cron - to run on boot
+    - supervisor - for starting and managing services
     - xautolock - starts the screensaver after so long of idle time
     - xtrlock - optionally locks keyboard and mouse on screensaver
     - xbacklight - sets display brightness for screensaver
@@ -43,8 +43,9 @@ https://www.paypal.me/windweaver828/
 Copy in any videos you would like to play, making sure the extensions are supported by your player of choice and are listed in your /etc/video-screensaver.cfg file, there is a decent small list of commonly supported extensions pre listed for you.
 
 * Manual starting and stopping of screensaver
-    - Use sudo start-video-screensaver to start
-    - Use sudo stop-video-screensaver to stop
+    - Use sudo video-screensaver start
+    or
+    - Use sudo video-screensaver stop
 
 * To uninstall
     - Simply run uninstall.sh as root, or with sudo
@@ -58,7 +59,7 @@ Copy in any videos you would like to play, making sure the extensions are suppor
 * Keith Brandenburg - windweaver828@gmail.com
 
 ### Todo ###
-* Get autocompletion working
+* GET IT TO START ON BOOT!!!
 * Add in xbacklight, screen brightness settings
 * Try to fix input monitor so that a dummy value isn't necessary, some kind of logic to read in x bytes if they are there upon first reading from device
 * Add option to mute system volume for a silent screensaver
