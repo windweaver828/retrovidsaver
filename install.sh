@@ -40,7 +40,7 @@ if [[ ! -f /etc/retrovidsaver.cfg ]]; then
 fi
 
 # Create accessible starter and stopper service function
-echo "Creating link to starter and stopper function"
+echo "Creating link to starter function"
 starter="/usr/local/bin/retrovidsaver-start"
 if [[ -L $starter ]]; then
     rm $starter
@@ -48,8 +48,8 @@ fi
 ln -sv $INSTALL_DIR/retrovidsaver-start $starter
 
 # Create accessible starter and stopper service function
-echo "Creating link to starter and stopper function"
-stopper="/usr/local/bin/retrovidsaver-start"
+echo "Creating link to stopper function"
+stopper="/usr/local/bin/retrovidsaver-stop"
 if [[ -L $stopper ]]; then
     rm $stopper
 fi

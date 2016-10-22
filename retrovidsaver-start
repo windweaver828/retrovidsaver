@@ -38,5 +38,9 @@ if __name__ == "__main__":
         log(message, username)
         sys.exit(1)
     else:
+        import time
+        curtime = time.ctime()
+        message = "retrovidsaver-start ran at {}".format(curtime)
+        log(message, username)
         cmd = 'xautolock -time {} -locker "sudo /usr/local/bin/retrovidsaver/screensaver.py"'.format(timer)
         os.system(cmd)
