@@ -1,0 +1,4 @@
+#!/bin/bash
+
+xautolock -exit
+pkill retrovidsaver

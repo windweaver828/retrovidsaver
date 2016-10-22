@@ -35,16 +35,16 @@ if [[ -L $stopper ]]; then
     rm $stopper
 fi
 
-# Remove upstart job
-upstartfile="/etc/init.d/retrovidsaver"
-if [[ -f $upstartfile ]]; then
-    echo "Removing upstart job"
-    rm $upstartfile
-fi
-upstartfile="/etc/rc2.d/S99retrovidsaver"
-if [[ -L $upstartfile ]]; then
-    rm $upstartfile
-fi
+# # Remove upstart job
+# upstartfile="/etc/init.d/retrovidsaver"
+# if [[ -f $upstartfile ]]; then
+#     echo "Removing upstart job"
+#     rm $upstartfile
+# fi
+# upstartfile="/etc/rc2.d/S99retrovidsaver"
+# if [[ -L $upstartfile ]]; then
+#     rm $upstartfile
+# fi
 
 echo
 echo "Do sudo visudo and remove a line near the bottom that looks like below"
