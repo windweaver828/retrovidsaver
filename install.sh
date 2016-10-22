@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/Video-Screensaver"
+INSTALL_DIR="/usr/local/bin/retrovidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then
@@ -17,7 +17,7 @@ fi
 
 # Copy over program files
 echo "Copying files"
-/bin/cp ./screensaver.py ./Process.py ./video-screensaver $INSTALL_DIR/
+/bin/cp ./screensaver.py ./Process.py ./retrovidsaver $INSTALL_DIR/
 echo
 echo "Setting program permissions"
 chown -R root:root $INSTALL_DIR/
@@ -31,23 +31,23 @@ chmod 755 $INSTALL_DIR/
 /bin/cp ./default.cfg $INSTALL_DIR/default.cfg
 chown root:root $INSTALL_DIR/default.cfg
 chmod 644 $INSTALL_DIR/default.cfg
-# and put it in /etc/video-screensaver.cfg if there isn't one
-if [[ ! -f /etc/video-screensaver.cfg ]]; then
+# and put it in /etc/retrovidsaver.cfg if there isn't one
+if [[ ! -f /etc/retrovidsaver.cfg ]]; then
     echo
     echo "No configuration file detected"
-    echo "Creating default configuration /etc/video-screensaver.cfg"
-    /bin/cp $INSTALL_DIR/default.cfg /etc/video-screensaver.cfg
+    echo "Creating default configuration /etc/retrovidsaver.cfg"
+    /bin/cp $INSTALL_DIR/default.cfg /etc/retrovidsaver.cfg
 fi
 
 # Create accessible starter and stopper service function
 echo "Creating link to starter and stopper function"
-starter="/usr/local/bin/video-screensaver"
+starter="/usr/local/bin/retrovidsaver"
 if [[ -f $starter ]]; then
     rm $starter
 fi
-ln -sv $INSTALL_DIR/video-screensaver $starter
+ln -sv $INSTALL_DIR/retrovidsaver $starter
 
 # Make service usable with sudo by anyone without authentication
 echo
 echo "Adding service to sudoers file so xautolock can run it with sudo"
-printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/Video-Screensaver/video-screensaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/Video-Screensaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)

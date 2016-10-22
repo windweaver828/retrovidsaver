@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/Video-Screensaver"
+INSTALL_DIR="/usr/local/bin/retrovidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then
@@ -16,17 +16,21 @@ if [[ -d $INSTALL_DIR ]]; then
 fi
 
 # Remove configuration file
-if [[ -f /etc/video-screensaver.cfg ]]; then
-    echo "Removing /etc/video-screensaver.cfg"
-    rm /etc/video-screensaver.cfg
+if [[ -f /etc/retrovidsaver.cfg ]]; then
+    echo "Removing /etc/retrovidsaver.cfg"
+    rm /etc/retrovidsaver.cfg
 fi
 
 # Remove starter and stopper function
-starter="/usr/local/bin/video-screensaver"
+starter="/usr/local/bin/retrovidsaver"
 if [[ -f $starter ]]; then
     echo "Removing link to starter and stopper function"
     rm $starter
 fi
+
+echo
+echo "Do sudo visudo and remove a line near the bottom that looks like below"
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
 
 echo
 echo "Uninstall completed."
