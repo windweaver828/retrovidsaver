@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/retrovidsaver"
+INSTALL_DIR="/usr/local/bin/retro-vidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then

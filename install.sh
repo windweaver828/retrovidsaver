@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/retrovidsaver"
+INSTALL_DIR="/usr/local/bin/retro-vidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then
@@ -50,4 +50,4 @@ ln -sv $INSTALL_DIR/retrovidsaver $starter
 # Make service usable with sudo by anyone without authentication
 echo
 echo "Adding service to sudoers file so xautolock can run it with sudo"
-printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/Video-Screensaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retro-vidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
