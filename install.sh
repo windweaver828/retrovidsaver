@@ -22,6 +22,7 @@ echo
 echo "Setting program permissions"
 chown -R root:root $INSTALL_DIR/
 chmod -R 700 $INSTALL_DIR/
+chmod 755 $INSTALL_DIR/
 chmod 755 $INSTALL_DIR/*
 
 # Generate new default configuration
