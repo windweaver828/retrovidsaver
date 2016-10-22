@@ -47,6 +47,16 @@ if [[ -f $starter ]]; then
 fi
 ln -sv $INSTALL_DIR/retrovidsaver $starter
 
+# Create upstart job to start screensaver on boot
+echo "Creating upstart job to start screensaver on boot"
+/bin/cp ./retrovidsaverinitd /etc/init.d/retrovidsaver
+chmod 755 /etc/init.d/retrovidsaver
+upstartfile="/etc/rc2.d/S99retrovidsaver"
+if [[ -f $upstartfile ]]; then
+    rm $upstartfile
+fi
+ln -sv /etc/init.d/retrovidsaver $upstartfile
+
 # Make service usable with sudo by anyone without authentication
 echo
 echo "Adding service to sudoers file so xautolock can run it with sudo"

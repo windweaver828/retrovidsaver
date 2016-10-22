@@ -23,14 +23,25 @@ fi
 
 # Remove starter and stopper function
 starter="/usr/local/bin/retrovidsaver"
-if [[ -f $starter ]]; then
+if [[ -L $starter ]]; then
     echo "Removing link to starter and stopper function"
     rm $starter
 fi
 
+# Remove upstart job
+upstartfile="/etc/init.d/retrovidsaver"
+if [[ -f $upstartfile ]]; then
+    echo "Removing upstart job"
+    rm $upstartfile
+fi
+upstartfile="/etc/rc2.d/S99retrovidsaver"
+if [[ -L $upstartfile ]]; then
+    rm $upstartfile
+fi
+
 echo
 echo "Do sudo visudo and remove a line near the bottom that looks like below"
-printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER"
 
 echo
 echo "Uninstall completed."
