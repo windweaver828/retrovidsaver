@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/retro-vidsaver"
+INSTALL_DIR="/usr/local/bin/retrovidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then
@@ -22,10 +22,17 @@ if [[ -f /etc/retrovidsaver.cfg ]]; then
 fi
 
 # Remove starter and stopper function
-starter="/usr/local/bin/retrovidsaver"
+starter="/usr/local/bin/retrovidsaver-start"
 if [[ -L $starter ]]; then
-    echo "Removing link to starter and stopper function"
+    echo "Removing link to starter function"
     rm $starter
+fi
+
+# Remove starter and stopper function
+stopper="/usr/local/bin/retrovidsaver-stop"
+if [[ -L $stopper ]]; then
+    echo "Removing link to stopper function"
+    rm $stopper
 fi
 
 # Remove upstart job
@@ -41,7 +48,7 @@ fi
 
 echo
 echo "Do sudo visudo and remove a line near the bottom that looks like below"
-printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER"
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/screensaver.py\nALL ALL=NOPASSWD: SCREENSAVER"
 
 echo
 echo "Uninstall completed."

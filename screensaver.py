@@ -83,7 +83,7 @@ def log(message, username):
     path = "/home/{}/".format(username)
     if not os.path.isdir("/home/{}/".format(username)):
         path = "/root/"
-    path += "Video-Screensaver-ERROR.log"
+    path += "retrovidsaver-ERROR.log"
     with open(path, 'a+') as f:
         f.write(message + "\n")
         f.flush()
@@ -106,14 +106,14 @@ def alphanum_key(s):
 
 if __name__ == '__main__':
     # Load config settings
-    CONFIGPATH = "/etc/video-screensaver.cfg"
+    CONFIGPATH = "/etc/retrovidsaver.cfg"
     if not os.path.isfile(CONFIGPATH):
         username = "root"
         input_devices = ["/dev/input/event4",
                          "/dev/input/mouse0",
                          "/dev/input/js0",
                          ]
-        video_directory = "/root/Video-Screensaver/videos/"
+        video_directory = "/root/retrovidsaver/videos/"
         video_extensions = ["mp4", ]
         shuffle = True
         player_command = "omxplayer"
@@ -145,7 +145,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Exit if an instance of this script is already running
-    ProcessName = "Video-Screensav"
+    ProcessName = "retrovidsaver"
     if Process.isRunning(ProcessName):
         message = "{} already running".format(ProcessName)
         log(message, username)

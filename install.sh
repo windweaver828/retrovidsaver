@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_DIR="/usr/local/bin/retro-vidsaver"
+INSTALL_DIR="/usr/local/bin/retrovidsaver"
 
 # Make sure we are root
 if [[ $EUID -ne 0 ]]; then
@@ -17,7 +17,7 @@ fi
 
 # Copy over program files
 echo "Copying files"
-/bin/cp ./screensaver.py ./Process.py ./retrovidsaver $INSTALL_DIR/
+/bin/cp ./screensaver.py ./Process.py ./retrovidsaver-start ./retrovidsaver-stop $INSTALL_DIR/
 echo
 echo "Setting program permissions"
 chown -R root:root $INSTALL_DIR/
@@ -41,23 +41,31 @@ fi
 
 # Create accessible starter and stopper service function
 echo "Creating link to starter and stopper function"
-starter="/usr/local/bin/retrovidsaver"
-if [[ -f $starter ]]; then
+starter="/usr/local/bin/retrovidsaver-start"
+if [[ -L $starter ]]; then
     rm $starter
 fi
-ln -sv $INSTALL_DIR/retrovidsaver $starter
+ln -sv $INSTALL_DIR/retrovidsaver-start $starter
+
+# Create accessible starter and stopper service function
+echo "Creating link to starter and stopper function"
+stopper="/usr/local/bin/retrovidsaver-start"
+if [[ -L $stopper ]]; then
+    rm $stopper
+fi
+ln -sv $INSTALL_DIR/retrovidsaver-stop $stopper
 
 # Create upstart job to start screensaver on boot
 echo "Creating upstart job to start screensaver on boot"
 /bin/cp ./retrovidsaverinitd /etc/init.d/retrovidsaver
 chmod 755 /etc/init.d/retrovidsaver
 upstartfile="/etc/rc2.d/S99retrovidsaver"
-if [[ -f $upstartfile ]]; then
+if [[ -L $upstartfile ]]; then
     rm $upstartfile
 fi
 ln -sv /etc/init.d/retrovidsaver $upstartfile
 
 # Make service usable with sudo by anyone without authentication
 echo
-echo "Adding service to sudoers file so xautolock can run it with sudo"
-printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retro-vidsaver/retrovidsaver\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)
+echo "Adding screensaver script to sudoers file so xautolock can run it with sudo"
+printf "Cmnd_Alias SCREENSAVER=/usr/local/bin/retrovidsaver/screensaver.py\nALL ALL=NOPASSWD: SCREENSAVER" | (EDITOR="tee -a" visudo)

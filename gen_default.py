@@ -111,7 +111,7 @@ if __name__ == '__main__':
     header = "Which user would you like to use? Note - Do not use root unless you have to, typically you would want to use your standard user name"
     footer = "User Number: "
     username = choice(header, users, footer)
-    video_directory = os.path.expanduser("~/Video-Screensaver/videos/")
+    video_directory = os.path.expanduser("~/retrovidsaver/videos/")
     if os.path.isdir("/dev/input/by-path/"):
         input_devices = get_nondirs("/dev/input/by-path/")
     elif os.path.isdir("/dev/input/by-id/"):
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     elif os.path.isdir("/dev/input/"):
         input_devices = get_nondirs("/dev/input/")
     else:
-        print("Couldn't find any suitable devices to monitor, edit /etc/video-screensaver.cfg manually")
+        print("Couldn't find any suitable devices to monitor, edit /etc/retrovidsaver.cfg manually")
         sys.exit(1)
     input_devices = " ".join(input_devices)
     omxplayer = which("omxplayer")
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     if len(player_commands.keys()) == 0:
         print("\n\nNo supported default players found.")
         print("Install omxplayer mplayer or vlc and run install.sh again.")
-        print("Or you can configure /etc/video-screensaver.cfg manually.")
+        print("Or you can configure /etc/retrovidsaver.cfg manually.")
         print("Going with defaults for omxplayer. Note -- this will not run unless you install omxplayer.\n\n")
         player_command = "omxplayer"
         player_args = ""
