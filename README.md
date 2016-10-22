@@ -44,7 +44,7 @@ Copy in any videos you would like to play, making sure the extensions are suppor
 * Manual starting and stopping of screensaver
     Note -- 2 lines are added to the sudoers file that give retrovidsaver the ability to be run with sudo without authentication
     - Use sudo retrovidsaver start
-    OR
+    - OR
     - Use sudo retrovidsaver stop
 
 * To uninstall
