@@ -15,11 +15,11 @@ if [[ -d $INSTALL_DIR ]]; then
     rm -rf $INSTALL_DIR
 fi
 
-# Remove configuration file
-if [[ -f /etc/retrovidsaver.cfg ]]; then
-    echo "Removing /etc/retrovidsaver.cfg"
-    rm /etc/retrovidsaver.cfg
-fi
+# # Remove configuration file
+# if [[ -f /etc/retrovidsaver.cfg ]]; then
+#     echo "Removing /etc/retrovidsaver.cfg"
+#     rm /etc/retrovidsaver.cfg
+# fi
 
 # Remove starter and stopper function
 starter="/usr/local/bin/retrovidsaver-start"
