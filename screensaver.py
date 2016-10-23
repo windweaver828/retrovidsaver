@@ -171,7 +171,7 @@ if __name__ == '__main__':
     video_list = get_videos(video_directory, video_extensions)
     if not video_list:
         msg = "No videos found, put some in {}".format(video_directory)
-        log(msg)
+        log(msg, username)
         sys.exit(1)
 
     # Play videos on a loop

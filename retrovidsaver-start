@@ -40,8 +40,5 @@ if __name__ == "__main__":
     else:
         import time
         curtime = time.ctime()
-        message = "retrovidsaver-start ran at {}".format(curtime)
-        message += "\nUSER={} DISPLAY={}".format(os.getenv("USER", "DISPLAY"))
-        log(message, username)
-        cmd = 'xautolock -time {} -locker "sudo /usr/local/bin/retrovidsaver/screensaver.py" &'.format(timer)
-        os.popen(cmd)
+        cmd = 'xautolock -time {} -locker "sudo /usr/local/bin/retrovidsaver/screensaver.py"'.format(timer)
+        os.system(cmd)
