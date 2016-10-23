@@ -60,7 +60,6 @@ Copy in any videos you would like to play, making sure the extensions are suppor
 * Keith Brandenburg - windweaver828@gmail.com
 
 ### Todo ###
-* GET IT TO START ON BOOT!!!
 * Add in xbacklight, screen brightness settings
 * Try to fix input monitor so that a dummy value isn't necessary, some kind of logic to read in x bytes if they are there upon first reading from device
 * Add option to mute system volume for a silent screensaver
