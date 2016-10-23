@@ -12,11 +12,11 @@
 
 RETVAL=0
 prog="retrovidsaver"
-/usr/local/bin/retrovidsaver start
+/usr/local/bin/retrovidsaver-start
 
 start() {
     echo -n $"Starting $prog:"
-    /usr/local/bin/retrovidsaver start
+    /usr/local/bin/retrovidsaver-start
     RETVAL=$?
     [ "$RETVAL" = 0 ] && touch /var/lock/subsys/$prog
     echo
@@ -24,7 +24,7 @@ start() {
 
 stop() {
     echo -n $"Stopping $prog:"
-    /usr/local/bin/retrovidsaver stop
+    /usr/local/bin/retrovidsaver-stop
 #    killproc $prog -TERM
     RETVAL=$?
     [ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/$prog
