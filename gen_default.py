@@ -52,11 +52,13 @@ lock = False
 """
 
 supervisor_text = """[program:retrovidsaver]
-stopsignal=KILL
-command=/usr/local/bin/retrovidsaver-start
+autostart=true
 user={username}
 environment=HOME="/home/{username}/",USER="{username}",DISPLAY=":0"
-autostart=true
+command=/usr/local/bin/retrovidsaver-start
+stopsignal=KILL
+killasgroup=true
+stopasgroup=true
 """
 
 
