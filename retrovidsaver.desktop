@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/local/bin/retrovidsaver-start
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[en_US]=retrovidsaver
+Comment[en_US]=start retrovidsaver
+X-GNOME-Autostart-Delay=60
