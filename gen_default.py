@@ -51,6 +51,13 @@ lock = False
 
 """
 
+supervisor_text = """[program:retrovidsaver]
+command=/usr/local/bin/retrovidsaver-start
+user={username}
+environment=HOME="/home/{username}/",USER="{username}",DISPLAY=":0"
+autostart=true
+"""
+
 
 def get_users():
     users = list()
@@ -160,4 +167,10 @@ if __name__ == '__main__':
 
     with open("./default.cfg", 'w') as f:
         f.write(default_text)
+        f.flush()
+
+    supervisor_text = supervisor_text.format(username=username)
+    
+    with open("./supervisor.conf", "w") as f:
+        f.write(supervisor_text)
         f.flush()

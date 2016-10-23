@@ -17,12 +17,13 @@ https://www.paypal.me/windweaver828/
 - Note - This program runs with root priveleges
 * Dependencies
     - python2.7 - should be preinstalled on most linux systems
+    - supervisor - to start screensaver on boot
     - xautolock - starts the screensaver after so long of idle time
     - xtrlock - optionally locks keyboard and mouse on screensaver
     - xbacklight - sets display brightness for screensaver
 
 * Install Dependencies
-    - sudo apt-get install python2.7 xautolock xtrlock xbacklight
+    - sudo apt-get install python2.7 supervisor xautolock xtrlock xbacklight
 
 * Clone the repository
     - cd ~
@@ -42,10 +43,9 @@ https://www.paypal.me/windweaver828/
 Copy in any videos you would like to play, making sure the extensions are supported by your player of choice and are listed in your /etc/retrovidsaver.cfg file, there is a decent small list of commonly supported extensions pre listed for you.
 
 * Manual starting and stopping of screensaver
-    Note -- 2 lines are added to the sudoers file that give retrovidsaver the ability to be run with sudo without authentication
-    - Use sudo retrovidsaver-start
+    - Use retrovidsaver-start
     - OR
-    - Use sudo retrovidsaver-stop
+    - Use retrovidsaver-stop
 
 * To uninstall
     - Simply run uninstall.sh as root, or with sudo

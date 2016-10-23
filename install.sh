@@ -56,15 +56,13 @@ if [[ -L $stopper ]]; then
 fi
 ln -sv $INSTALL_DIR/retrovidsaver-stop $stopper
 
-# # Create upstart job to start screensaver on boot
-# echo "Creating upstart job to start screensaver on boot"
-# /bin/cp ./retrovidsaverinitd /etc/init.d/retrovidsaver
-# chmod 755 /etc/init.d/retrovidsaver
-# upstartfile="/etc/rc2.d/S99retrovidsaver"
-# if [[ -L $upstartfile ]]; then
-#     rm $upstartfile
-# fi
-# ln -sv /etc/init.d/retrovidsaver $upstartfile
+# Copy generated supervisor conf file
+echo "Copying supervisor conf file"
+supervisor="/etc/supervisor/conf.d/retrovidsaver.conf"
+if [[ -f $supervisor ]]; then
+    rm $supervisor
+fi
+/bin/cp ./supervisor.conf $supervisor
 
 # Make service usable with sudo by anyone without authentication
 echo
