@@ -1,4 +1,5 @@
 #!/bin/bash
 
+echo "Stopped"
+echo "Stopped" >> $HOME/retrovidsaver-ERROR.log
 xautolock -exit
-pkill retrovidsaver

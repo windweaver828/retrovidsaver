@@ -4,7 +4,12 @@ import os
 import sys
 import ConfigParser
 import Process
+import signal
 
+
+def sigterm_handler(_signo, _stack_frame):
+    os.popen("/usr/local/bin/retrovidsaver-stop")
+    sys.exit(0)
 
 def log(message, username):
     print(message)
@@ -17,6 +22,8 @@ def log(message, username):
         f.flush()
 
 if __name__ == "__main__":
+    # Catch kill signals
+    signal.signal(signal.SIGTERM, sigterm_handler)
     # Load config settings
     CONFIGPATH = "/etc/retrovidsaver.cfg"
     if not os.path.isfile(CONFIGPATH):
@@ -38,8 +45,5 @@ if __name__ == "__main__":
         log(message, username)
         sys.exit(1)
     else:
-        import time
-        message = "Started at {}".format(time.ctime())
-        message += "\nUSER={} DISPLAY={}\n".format(os.getenv("USER"), os.getenv("DISPLAY"))
         cmd = 'xautolock -time {} -locker "sudo /usr/local/bin/retrovidsaver/screensaver.py"'.format(timer)
         os.system(cmd)

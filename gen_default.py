@@ -52,6 +52,7 @@ lock = False
 """
 
 supervisor_text = """[program:retrovidsaver]
+stopsignal=KILL
 command=/usr/local/bin/retrovidsaver-start
 user={username}
 environment=HOME="/home/{username}/",USER="{username}",DISPLAY=":0"
